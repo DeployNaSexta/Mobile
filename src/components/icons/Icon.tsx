@@ -1,7 +1,8 @@
-// Um único componente que resolve o nome do ícone pro SVG correspondente.
-// Mantém os mesmos paths usados no protótipo original, só reembalados
-// como string (evita ficar convertendo stroke-width -> strokeWidth em
-// cada arquivo .jsx).
+
+import { SvgXml } from "react-native-svg";
+import { theme } from "@/styles/theme";
+
+// Caminhos SVG dos ícones
 const PATHS = {
   machine: `<rect x="2.5" y="8" width="9" height="9"/><path d="M11.5 11.5H17L20.5 15v4H11.5"/><circle cx="7" cy="19" r="1.7"/><circle cx="16.5" cy="19" r="1.7"/>`,
   chevron: `<polyline points="9 6 15 12 9 18"/>`,
@@ -24,23 +25,45 @@ const PATHS = {
   reports: `<line x1="6" y1="20" x2="6" y2="11"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="18" y1="20" x2="18" y2="15"/>`,
   settings: `<circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.7 1.7 0 00.34 1.87l.06.06a2 2 0 11-2.83 2.83l-.06-.06a1.7 1.7 0 00-1.87-.34 1.7 1.7 0 00-1 1.55V21a2 2 0 01-4 0v-.09a1.7 1.7 0 00-1-1.56 1.7 1.7 0 00-1.87.34l-.06.06a2 2 0 11-2.83-2.83l.06-.06a1.7 1.7 0 00.34-1.87 1.7 1.7 0 00-1.55-1H3a2 2 0 010-4h.09a1.7 1.7 0 001.55-1 1.7 1.7 0 00-.34-1.87l-.06-.06a2 2 0 112.83-2.83l.06.06a1.7 1.7 0 001.87.34H9a1.7 1.7 0 001-1.55V3a2 2 0 014 0v.09a1.7 1.7 0 001 1.55 1.7 1.7 0 001.87-.34l.06-.06a2 2 0 112.83 2.83l-.06.06a1.7 1.7 0 00-.34 1.87V9a1.7 1.7 0 001.55 1H21a2 2 0 010 4h-.09a1.7 1.7 0 00-1.55 1z"/>`,
   logout: `<path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>`,
-};
+} as const;
 
-export default function Icon({ name, size = 18, ...props }) {
+// Exporta os nomes permitidos para outros componentes
+export type IconName = keyof typeof PATHS;
+
+interface IconProps {
+  name: IconName;
+  size?: number;
+  color?: string;
+}
+
+export default function Icon({
+  name,
+  size = 18,
+  color = theme.colors.text,
+}: IconProps) {
   const inner = PATHS[name];
-  if (!inner) return null;
-  return (
+
+  const xml = `
     <svg
+      xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 24 24"
+      width="${size}"
+      height="${size}"
+      fill="none"
+      stroke="${color}"
+      stroke-width="2"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+    >
+      ${inner.replace(/currentColor/g, color)}
+    </svg>
+  `;
+
+  return (
+    <SvgXml
+      xml={xml}
       width={size}
       height={size}
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      dangerouslySetInnerHTML={{ __html: inner }}
-      {...props}
     />
   );
 }

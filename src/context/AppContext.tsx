@@ -1,8 +1,5 @@
 import { createContext, useContext, useState, useCallback, useRef } from "react";
 
-// Estado compartilhado simples: qual máquina está selecionada no
-// Dashboard, e o toast global. Equivalente ao "window.SensusApp" +
-// "Router.showToast" da versão vanilla, só que do jeito React (Context).
 const AppContext = createContext(null);
 
 export function AppProvider({ children }) {

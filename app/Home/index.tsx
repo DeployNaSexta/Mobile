@@ -1,3 +1,4 @@
+
 import { View, Text, ScrollView, StyleSheet, Pressable } from "react-native";
 import { useRouter } from "expo-router";
 
@@ -14,12 +15,12 @@ export default function Home() {
   const { machines, loading: machinesLoading } = useMachines();
   const { alerts, loading: alertsLoading } = useAlerts();
 
-  const ativas = machines.filter(
-    (machine) => machine.status === "Normal"
-  ).length;
-
   return (
-    <ScrollView style={styles.container}>
+    <ScrollView
+      style={styles.container}
+      contentContainerStyle={styles.content}
+      showsVerticalScrollIndicator={false}
+    >
       <View style={styles.header}>
         <Text style={styles.title}>Visão Geral da Fazenda</Text>
       </View>
@@ -28,14 +29,14 @@ export default function Home() {
         <StatCard
           onPress={() => router.push("/maquinas")}
           icon="machine"
-          value={machinesLoading ? "..." : `${ativas}/${machines.length}`}
-          label="Máquinas Ativas"
+          value={machinesLoading ? "..." : machines.length}
+          label="Máquinas Cadastradas"
         />
 
         <StatCard
           onPress={() => router.push("/alertas")}
           icon="warning"
-          iconColor="#E5A000"
+          iconColor={theme.colors.warning}
           value={alertsLoading ? "..." : alerts.length}
           label="Alertas"
         />
@@ -44,7 +45,10 @@ export default function Home() {
       <View style={styles.sectionHead}>
         <Text style={styles.sectionTitle}>Suas Máquinas</Text>
 
-        <Pressable onPress={() => router.push("/maquinas")}>
+        <Pressable
+          onPress={() => router.push("/maquinas")}
+          accessibilityRole="button"
+        >
           <Text style={styles.link}>Ver todas</Text>
         </Pressable>
       </View>
@@ -68,7 +72,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: theme.colors.background,
+  },
+  content: {
     padding: 20,
+    paddingBottom: 32,
   },
   header: {
     marginTop: 20,
@@ -77,7 +84,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 25,
     fontWeight: "bold",
-    color: "#0F172A",
+    color: theme.colors.text,
   },
   statGrid: {
     flexDirection: "row",
@@ -94,19 +101,18 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 19,
     fontWeight: "bold",
-    color: "#0F172A",
+    color: theme.colors.text,
   },
   link: {
-    color: "#2563EB",
+    color: theme.colors.primary,
     fontSize: 14,
     fontWeight: "600",
   },
   machineList: {
     gap: 12,
-    paddingBottom: 30,
   },
   empty: {
-    color: "#64748B",
+    color: theme.colors.muted,
     textAlign: "center",
     padding: 20,
   },

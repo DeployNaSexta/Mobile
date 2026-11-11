@@ -1,9 +1,11 @@
+
 import {
   createContext,
   useContext,
   useState,
   useCallback,
   useRef,
+  useEffect,
   type ReactNode,
 } from "react";
 
@@ -40,6 +42,14 @@ export function AppProvider({ children }: AppProviderProps) {
       setToast(null);
       toastTimer.current = null;
     }, 1800);
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      if (toastTimer.current) {
+        clearTimeout(toastTimer.current);
+      }
+    };
   }, []);
 
   return (

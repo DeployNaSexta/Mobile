@@ -1,35 +1,41 @@
 
 import { View, Text, Pressable, StyleSheet } from "react-native";
-import { useRouter, usePathname } from "expo-router";
+import { useRouter, usePathname, type Href } from "expo-router";
 
-import { NAV_ITEMS } from "./navConfig";
+import Icon from "@/components/icons/Icon";
+import { NAV_ITEMS } from "@/components/shared/navConfig";
 import { theme } from "@/styles/theme";
 
 export default function BottomNav() {
   const router = useRouter();
   const pathname = usePathname();
+  console.log("ROTA ATUAL:", pathname);
+  const currentPath = pathname.toLowerCase().replace(/\/$/, "");
 
   return (
     <View style={styles.container}>
       {NAV_ITEMS.map((item) => {
-        const Icon = item.icon;
-        const active = pathname.startsWith(
-          item.name === "index" ? "/Home" : `/${item.name.split("/")[0]}`
-        );
+        const itemPath = item.to.toLowerCase().replace(/\/$/, "");
 
-        const route =
-          item.name === "index"
-            ? "/Home"
-            : `/${item.name.split("/")[0]}`;
-
+        const active =
+          currentPath === itemPath ||
+          (itemPath === "/" && currentPath === "/home") ||
+          (itemPath !== "/" && currentPath.startsWith(`${itemPath}/`));
         return (
           <Pressable
-            key={item.name}
-            style={styles.item}
-            onPress={() => router.navigate(route as any)}
+            key={item.to}
+            style={({ pressed }) => [
+              styles.item,
+              active && styles.itemActive,
+              pressed && styles.itemPressed,
+            ]}
+            onPress={() => router.navigate(item.to as Href)}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: active }}
           >
             <Icon
-              size={21}
+              name={item.icon}
+              size={26}
               color={
                 active
                   ? theme.colors.primary
@@ -55,27 +61,42 @@ export default function BottomNav() {
 
 const styles = StyleSheet.create({
   container: {
-    height: 70,
+    minHeight: 75,
     flexDirection: "row",
     alignItems: "center",
-    justifyContent: "space-around",
+    justifyContent: "space-between",
     backgroundColor: theme.colors.surface,
     borderTopWidth: 1,
     borderTopColor: theme.colors.border,
-    paddingHorizontal: 4,
+    paddingHorizontal: 8,
+    paddingVertical: 6,
   },
+
   item: {
     flex: 1,
-    height: "100%",
+    height: 68,
     alignItems: "center",
     justifyContent: "center",
-    gap: 5,
+    gap: 1,
+    borderRadius: theme.radius.small,
+    marginHorizontal: 3,
   },
+
+  itemActive: {
+    backgroundColor: "#1B3518",
+  },
+
+  itemPressed: {
+    opacity: 0.65,
+  },
+
   label: {
     color: theme.colors.muted,
-    fontSize: 9,
+    fontSize: 13,
     fontWeight: "600",
+    textAlign: "center",
   },
+
   activeLabel: {
     color: theme.colors.primary,
     fontWeight: "800",

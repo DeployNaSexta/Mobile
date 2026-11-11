@@ -1,18 +1,21 @@
+import type { IconName } from "@/components/icons/Icon";
 
-import {
-  Home,
-  Gauge,
-  Cog,
-  FileText,
-  Bell,
-  Settings,
-} from "lucide-react-native";
+interface NavItem {
+  to: string;
+  label: string;
+  icon: IconName;
+}
 
-export const NAV_ITEMS = [
-  { name: "index", label: "Início", icon: Home },
-  { name: "Dashboard/index", label: "Dashboard", icon: Gauge },
-  { name: "Machine/index", label: "Máquinas", icon: Cog },
-  { name: "Reports/index", label: "Relatórios", icon: FileText },
-  { name: "Alerts/index", label: "Alertas", icon: Bell },
-  { name: "Settings/index", label: "Ajustes", icon: Settings },
+export const NAV_ITEMS: NavItem[] = [
+  { to: "/Home", label: "Início", icon: "home" },
+  { to: "/dashboard", label: "Dashboard", icon: "dashboard" },
+  { to: "/maquinas", label: "Máquinas", icon: "machine" },
+  { to: "/relatorios", label: "Relatórios", icon: "reports" },
+  { to: "/alertas", label: "Alertas", icon: "bell" },
 ];
+
+export const SETTINGS_ITEM: NavItem = {
+  to: "/config",
+  label: "Configurações",
+  icon: "settings",
+};

@@ -8,12 +8,10 @@ export interface Alert {
 }
 
 export interface Machine {
-  id: number;
-  nome: string;
-  temperatura: number;
-  vibracao: number;
-  vibracaoX: number;
-  vibracaoY: number;
-  vibracaoZ: number;
-  status: string;
+  id: string | number;
+  name: string;
+  model: string;
+  temp: number;
+  vib: number;
+  updatedAt: Date | string | null;
 }
