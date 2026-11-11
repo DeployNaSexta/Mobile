@@ -1,11 +1,12 @@
-import { Pressable, View, Text, StyleSheet } from "react-native";
-import { theme } from "@/styles/theme";
 
+import { Pressable, View, Text, StyleSheet } from "react-native";
 import {
   Cog,
   AlertTriangle,
   ChevronRight,
 } from "lucide-react-native";
+
+import { theme } from "@/styles/theme";
 
 interface StatCardProps {
   onPress: () => void;
@@ -36,31 +37,44 @@ export default function StatCard({
         styles.container,
         pressed && styles.pressed,
       ]}
+      accessibilityRole="button"
     >
       <View style={styles.topRow}>
-        <Icon size={22} color={iconColor ?? "#64748B"} />
-        <ChevronRight size={18} color="#94A3B8" />
+        <Icon
+          size={22}
+          color={iconColor ?? theme.colors.muted}
+          strokeWidth={2}
+        />
+
+        <ChevronRight
+          size={18}
+          color={theme.colors.mutedSecondary}
+        />
       </View>
 
       <Text style={styles.value}>{value}</Text>
-      <Text style={styles.label}>{label}</Text>
+
+      <Text style={styles.label} numberOfLines={2}>
+        {label}
+      </Text>
     </Pressable>
   );
 }
 
-
 const styles = StyleSheet.create({
   container: {
-    width: "48%",
+    flex: 1,
+    minWidth: 0,
     backgroundColor: theme.colors.surface,
-    padding: 16,
+    padding: theme.spacing.md,
     borderRadius: theme.radius.medium,
     borderWidth: 1,
     borderColor: theme.colors.border,
-    gap: 8,
+    gap: theme.spacing.sm,
   },
   pressed: {
     opacity: 0.7,
+    backgroundColor: theme.colors.surfaceSecondary,
   },
   topRow: {
     flexDirection: "row",
@@ -68,12 +82,13 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   value: {
-    fontSize: 25,
+    fontSize: 26,
     fontWeight: "900",
     color: theme.colors.text,
   },
   label: {
     fontSize: 13,
+    fontWeight: "600",
     color: theme.colors.muted,
   },
 });
