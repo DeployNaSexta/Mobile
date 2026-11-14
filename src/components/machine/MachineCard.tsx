@@ -1,5 +1,6 @@
+
 import { View, Text, Pressable, StyleSheet } from "react-native";
-import { useRouter } from "expo-router";
+import { theme } from "@/styles/theme";
 import {
   Cog,
   Thermometer,
@@ -7,62 +8,37 @@ import {
   Clock,
 } from "lucide-react-native";
 
-import { useApp } from "@/components/contexts/AppContext";
 import { formatUpdated } from "@/components/utils/format";
 
 interface Machine {
   id: string | number;
-  name: string;
-  model: string;
-  status: "operando" | "alerta" | "critico";
-  temp: number;
-  vib: number;
-  updatedAt: string;
+  nome: string;
+  temperatura: number;
+  vibracao: number;
+  status: "Alerta" | "Normal";
+  createdAt: string;
 }
 
 interface MachineCardProps {
   machine: Machine;
   selected: boolean;
+  onPress: () => void;
 }
-
-const STATUS_LABEL = {
-  operando: "Operando",
-  alerta: "Alerta",
-  critico: "Crítico",
-};
-
-const STATUS_COLORS = {
-  operando: {
-    background: "#DCFCE7",
-    text: "#15803D",
-  },
-  alerta: {
-    background: "#FEF3C7",
-    text: "#B45309",
-  },
-  critico: {
-    background: "#FEE2E2",
-    text: "#B91C1C",
-  },
-};
 
 export default function MachineCard({
   machine,
   selected,
+  onPress,
 }: MachineCardProps) {
-  const router = useRouter();
-  const { setSelectedMachineId } = useApp();
+  const isAlert = machine.status === "Alerta";
 
-  function open() {
-    setSelectedMachineId(machine.id);
-    router.push("/dashboard");
-  }
-
-  const statusColor = STATUS_COLORS[machine.status];
+  const statusColor = isAlert
+    ? { background: "#FEE2E2", text: "#B91C1C" }
+    : { background: "#DCFCE7", text: "#15803D" };
 
   return (
     <Pressable
-      onPress={open}
+      onPress={onPress}
       style={({ pressed }) => [
         styles.container,
         selected && styles.selected,
@@ -75,8 +51,8 @@ export default function MachineCard({
         </View>
 
         <View style={styles.info}>
-          <Text style={styles.name}>{machine.name}</Text>
-          <Text style={styles.model}>{machine.model}</Text>
+          <Text style={styles.name}>{machine.nome}</Text>
+          <Text style={styles.model}>Máquina monitorada</Text>
         </View>
 
         <View
@@ -85,8 +61,14 @@ export default function MachineCard({
             { backgroundColor: statusColor.background },
           ]}
         >
-          <Text style={{ color: statusColor.text, fontSize: 11, fontWeight: "600" }}>
-            {STATUS_LABEL[machine.status]}
+          <Text
+            style={{
+              color: statusColor.text,
+              fontSize: 11,
+              fontWeight: "600",
+            }}
+          >
+            {isAlert ? "Alerta" : "Operando"}
           </Text>
         </View>
       </View>
@@ -94,18 +76,22 @@ export default function MachineCard({
       <View style={styles.specs}>
         <View style={styles.spec}>
           <Thermometer size={14} color="#64748B" />
-          <Text style={styles.specText}>{machine.temp}°C</Text>
+          <Text style={styles.specText}>
+            {machine.temperatura}°C
+          </Text>
         </View>
 
         <View style={styles.spec}>
           <Activity size={14} color="#64748B" />
-          <Text style={styles.specText}>{machine.vib} mm/s</Text>
+          <Text style={styles.specText}>
+            {machine.vibracao} mm/s
+          </Text>
         </View>
 
         <View style={styles.spec}>
           <Clock size={14} color="#64748B" />
           <Text style={styles.specText}>
-            {formatUpdated(machine.updatedAt)}
+            {formatUpdated(machine.createdAt)}
           </Text>
         </View>
       </View>
@@ -115,15 +101,15 @@ export default function MachineCard({
 
 const styles = StyleSheet.create({
   container: {
-    backgroundColor: "#FFFFFF",
+    backgroundColor: theme.colors.surface,
     padding: 16,
     borderRadius: 14,
     borderWidth: 1,
-    borderColor: "#E2E8F0",
+    borderColor: theme.colors.border,
     gap: 16,
   },
   selected: {
-    borderColor: "#2563EB",
+    borderColor: theme.colors.primary,
     borderWidth: 2,
   },
   pressed: {
@@ -138,7 +124,7 @@ const styles = StyleSheet.create({
     width: 44,
     height: 44,
     borderRadius: 10,
-    backgroundColor: "#F1F5F9",
+    backgroundColor: theme.colors.background,
     alignItems: "center",
     justifyContent: "center",
   },
@@ -149,11 +135,11 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#0F172A",
+    color: theme.colors.text,
   },
   model: {
     fontSize: 12,
-    color: "#64748B",
+    color: theme.colors.muted,
   },
   badge: {
     paddingHorizontal: 9,
@@ -172,6 +158,6 @@ const styles = StyleSheet.create({
   },
   specText: {
     fontSize: 11,
-    color: "#64748B",
+    color: theme.colors.muted,
   },
 });

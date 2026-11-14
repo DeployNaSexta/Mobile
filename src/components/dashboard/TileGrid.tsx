@@ -1,50 +1,36 @@
+
 import { View, Text, StyleSheet } from "react-native";
 import {
   Thermometer,
   Activity,
-  MoveHorizontal,
-  MoveVertical,
-  Waves,
 } from "lucide-react-native";
 
-import type { Machine } from "@/types";
+import type { Monitoramento } from "@/types";
 import { theme } from "@/styles/theme";
 
 interface TileGridProps {
-  machine: Machine;
+  monitoramento: Monitoramento;
 }
 
-export default function TileGrid({ machine }: TileGridProps) {
+export default function TileGrid({ monitoramento }: TileGridProps) {
   const tiles = [
     {
       label: "Temperatura",
-      value: `${machine.temperatura}°C`,
+      value:
+        monitoramento.media.temperatura === null
+          ? "--"
+          : `${monitoramento.media.temperatura}°C`,
       icon: Thermometer,
       color: theme.colors.warning,
     },
     {
-      label: "Vibração geral",
-      value: String(machine.vibracao),
+      label: "Vibração média",
+      value:
+        monitoramento.media.vibracao === null
+          ? "--"
+          : String(monitoramento.media.vibracao),
       icon: Activity,
       color: theme.colors.primary,
-    },
-    {
-      label: "Vibração eixo X",
-      value: String(machine.vibracaoX),
-      icon: MoveHorizontal,
-      color: theme.colors.info,
-    },
-    {
-      label: "Vibração eixo Y",
-      value: String(machine.vibracaoY),
-      icon: MoveVertical,
-      color: theme.colors.primary,
-    },
-    {
-      label: "Vibração eixo Z",
-      value: String(machine.vibracaoZ),
-      icon: Waves,
-      color: theme.colors.warning,
     },
   ];
 

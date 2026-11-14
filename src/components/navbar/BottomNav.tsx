@@ -3,7 +3,7 @@ import { View, Text, Pressable, StyleSheet } from "react-native";
 import { useRouter, usePathname, type Href } from "expo-router";
 
 import Icon from "@/components/icons/Icon";
-import { NAV_ITEMS } from "@/components/shared/navConfig";
+import { NAV_ITEMS } from "@/components/navbar/navConfig";
 import { theme } from "@/styles/theme";
 
 export default function BottomNav() {
