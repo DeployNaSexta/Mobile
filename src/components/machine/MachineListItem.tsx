@@ -3,14 +3,11 @@ import { useRouter } from "expo-router";
 import { Cog } from "lucide-react-native";
 import { theme } from "@/styles/theme";
 import { useApp } from "@/components/contexts/AppContext";
-import type { Machine } from "@/types";
-
-interface MachineListItemProps {
-  machine: Machine;
-}
+import type { MachineListItemProps } from "@/types";
 
 export default function MachineListItem({
   machine,
+  onPress,
 }: MachineListItemProps) {
   const router = useRouter();
   const { setSelectedMachineId } = useApp();
@@ -22,7 +19,7 @@ export default function MachineListItem({
 
   return (
     <Pressable
-      onPress={open}
+      onPress={onPress}
       style={({ pressed }) => [
         styles.container,
         pressed && styles.pressed,

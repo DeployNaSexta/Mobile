@@ -1,3 +1,4 @@
+
 import { View, Text, StyleSheet } from "react-native";
 import Svg, { Circle } from "react-native-svg";
 
@@ -11,9 +12,23 @@ export default function Gauge({ value, label, pct }: GaugeProps) {
   const r = 32;
   const c = 2 * Math.PI * r;
 
-  const percentage = Math.min(Math.max(pct, 0), 1);
+  const percentage = Number.isFinite(pct)
+    ? Math.min(Math.max(pct, 0), 1)
+    : 0;
+
   const off = c * (1 - percentage);
 
+  const temperature = Number(
+    String(value).replace(/[^\d.-]/g, "")
+  );
+
+  const gaugeColor = !Number.isFinite(temperature)
+    ? "#22C55E"
+    : temperature >= 60
+      ? "#EF4444"
+      : temperature >= 40
+        ? "#EAB308"
+        : "#22C55E";
   return (
     <View style={styles.container}>
       <View style={styles.ring}>
@@ -33,14 +48,12 @@ export default function Gauge({ value, label, pct }: GaugeProps) {
             cx={40}
             cy={40}
             r={r}
-            stroke="#2563EB"
+            stroke={gaugeColor}
             strokeWidth={6}
             fill="none"
             strokeDasharray={`${c} ${c}`}
             strokeDashoffset={off}
             strokeLinecap="round"
-            rotation={-90}
-            origin="40, 40"
           />
         </Svg>
 
@@ -73,7 +86,7 @@ const styles = StyleSheet.create({
   value: {
     fontSize: 16,
     fontWeight: "bold",
-    color: "#0F172A",
+    color: "#e1e2e6",
   },
   label: {
     fontSize: 12,

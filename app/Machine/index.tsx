@@ -1,5 +1,6 @@
-import { View, Text, StyleSheet, ScrollView } from "react-native";
 
+import { View, Text, StyleSheet, ScrollView,  } from "react-native";
+import { useRouter } from "expo-router";
 import { useMachines } from "@/hooks/useMachine";
 import { useApp } from "@/components/contexts/AppContext";
 
@@ -7,8 +8,15 @@ import MachineCard from "@/components/machine/MachineCard";
 
 export default function Machines() {
   const { machines, loading } = useMachines();
-  const { selectedMachineId } = useApp();
-''
+  const { selectedMachineId, setSelectedMachineId } = useApp();
+  const router = useRouter();
+
+  function handleMachinePress(machineId: string | number) {
+    setSelectedMachineId(String(machineId));
+
+    router.push("/Dashboard");
+  }
+
   if (loading) {
     return (
       <View style={styles.center}>
@@ -23,7 +31,6 @@ export default function Machines() {
       contentContainerStyle={styles.content}
     >
       <View>
-        <Text style={styles.eyebrow}>Frota Cadastrada</Text>
         <Text style={styles.title}>Máquinas</Text>
       </View>
 
@@ -52,6 +59,7 @@ export default function Machines() {
             selected={
               String(machine.id) === String(selectedMachineId)
             }
+            onPress={() => handleMachinePress(machine.id)}
           />
         ))}
 
@@ -68,7 +76,7 @@ export default function Machines() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#F8FAFC",
+    backgroundColor: "#0F0F0F",
   },
   content: {
     padding: 16,
@@ -80,15 +88,10 @@ const styles = StyleSheet.create({
     alignItems: "center",
     backgroundColor: "#F8FAFC",
   },
-  eyebrow: {
-    fontSize: 12,
-    fontWeight: "600",
-    color: "#64748B",
-  },
   title: {
     fontSize: 26,
     fontWeight: "bold",
-    color: "#0F172A",
+    color: "#F8F8F8",
     marginTop: 4,
   },
   legend: {
